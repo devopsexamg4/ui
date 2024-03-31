@@ -7,6 +7,7 @@ on:
 env:
   PROJECT_ID: devsecopsexamproject
   GAR_LOCATION: europe-west3
+  GAR_URL: europe-west3-docker.pkg.dev/devsecopsexamproject/exam-builds/
   SERVICE: ui
 
 jobs:
@@ -39,6 +40,7 @@ jobs:
       - name: Build and Push Container
         run: |-
           cd ${{ github.workspace }}
-          docker build -t  "devsecopsexamproject.pkg.dev/europe-west3/exam-builds/${{ env.SERVICE }}:${{ github.sha }}" ./
-          docker push devsecopsexamproject.pkg.dev/europe-west3/exam-builds/${{ env.SERVICE }}:${{ github.sha }}
+          docker build -t  "${{env.GAR_URL}}" ./
+          docker push ${{env.GAR_URL}}
+          
 
