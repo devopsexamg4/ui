@@ -25,6 +25,17 @@ jobs:
         with:
           credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY}}
 
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
+
+          
+      - name: "Docker auth"
+        run: |-
+              gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
+              
       - name: Build and Push Container
         run: |-
           cd ${{ github.workspace }}
