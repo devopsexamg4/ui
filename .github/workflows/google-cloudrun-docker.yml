@@ -28,6 +28,6 @@ jobs:
       - name: Build and Push Container
         run: |-
           cd ${{ github.workspace }}
-          docker build -t  "${{ env.SERVICE }}:${{ github.sha }}" ./
+          docker build -t  "devsecopsexamproject.pkg.dev/europe-west3/exam-builds/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push devsecopsexamproject.pkg.dev/europe-west3/exam-builds/${{ env.SERVICE }}:${{ github.sha }}
 
