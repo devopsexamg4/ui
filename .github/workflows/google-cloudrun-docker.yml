@@ -7,7 +7,7 @@ on:
 env:
   PROJECT_ID: devsecopsexamproject
   GAR_LOCATION: europe-north1
-  GAR_URL: europe-north1-docker.pkg.dev/devsecopsexamproject/exam-project/ui-dev
+  GAR_URL: europe-north1-docker.pkg.dev/devsecopsexamproject/exam-project/ui
   SERVICE: ui
 
 jobs:
