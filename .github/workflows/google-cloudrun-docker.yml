@@ -2,7 +2,7 @@ name: Build and Push to Google Artifact Registry
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "dev"]
 
 env:
   PROJECT_ID: devsecopsexamproject
@@ -24,7 +24,7 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY}}
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
 
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
@@ -39,8 +39,21 @@ jobs:
               
       - name: Build and Push Container
         run: |-
-          cd ${{ github.workspace }}
-          docker build . -t  ${{env.GAR_URL}}:latest
-          docker push ${{env.GAR_URL}}
-          
+          echo "${{ secrets.KEY }}" > secret_1.txt
+          echo "${{ secrets.DEBUG }}" > secret_2.txt
+          echo "${{ secrets.ALLOWED_HOSTS }}" > secret_3.txt
+          echo "${{ secrets.SU_PASS }}" > secret_4.txt
+          echo "${{ secrets.SU_USER }}" > secret_5.txt
+          echo "${{ secrets.SU_EMAIL }}" > secret_6.txt
 
+          cd ${{ github.workspace }}
+          IMAGE_TAG=${{env.GAR_URL}}${{ github.ref == 'refs/heads/dev' && '-dev' || '' }}
+          docker build . --secret id=secret_1,src=secret_1.txt \
+                         --secret id=secret_2,src=secret_2.txt \
+                         --secret id=secret_3,src=secret_3.txt \
+                         --secret id=secret_4,src=secret_4.txt \
+                         --secret id=secret_5,src=secret_5.txt \
+                         --secret id=secret_6,src=secret_6.txt \
+                         -t  $IMAGE_TAG:latest
+          docker push $IMAGE_TAG
+          

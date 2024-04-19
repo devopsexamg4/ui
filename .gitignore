@@ -60,6 +60,8 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+# static folder does not belong in repo
+UI/static/*
 
 # Flask stuff:
 instance/
