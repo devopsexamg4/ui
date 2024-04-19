@@ -2,12 +2,12 @@ name: Build and Push to Google Artifact Registry
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "dev"]
 
 env:
   PROJECT_ID: devsecopsexamproject
   GAR_LOCATION: europe-north1
-  GAR_URL: europe-north1-docker.pkg.dev/devsecopsexamproject/exam-project/ui
+  GAR_URL: europe-north1-docker.pkg.dev/devsecopsexamproject/exam-project/ui-dev
   SERVICE: ui
 
 jobs:
