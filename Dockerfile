@@ -26,6 +26,4 @@ RUN mkdir -p /var/run/gunicorn/
 WORKDIR /app
 
 RUN chmod +x ./entrypoint.sh
-RUN cat entrypoint.sh
-RUN cat .env
 ENTRYPOINT [ "sh","./entrypoint.sh" ]
