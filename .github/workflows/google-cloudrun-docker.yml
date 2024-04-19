@@ -47,6 +47,12 @@ jobs:
           "secret_6=${{ secrets.SU_EMAIL }}"
         run: |-
           cd ${{ github.workspace }}
-          docker build . -t  ${{env.GAR_URL}}:latest
+          docker build . --secret id=secret_1,src=${{ secrets.KEY }} \
+                   --secret id=secret_2,src=${{ secrets.DEBUG }} \
+                   --secret id=secret_3,src=${{ secrets.ALLOWED_HOSTS }} \
+                   --secret id=secret_4,src=${{ secrets.SU_PASS }} \
+                   --secret id=secret_5,src=${{ secrets.SU_USER }} \
+                   --secret id=secret_6,src=${{ secrets.SU_EMAIL }} \
+                   -t  ${{env.GAR_URL}}:latest
           docker push ${{env.GAR_URL}}
           
