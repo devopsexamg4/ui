@@ -47,12 +47,13 @@ jobs:
           echo "${{ secrets.SU_EMAIL }}" > secret_6.txt
 
           cd ${{ github.workspace }}
+          IMAGE_TAG=${{env.GAR_URL}}${{ github.ref == 'refs/heads/dev' && '-dev' || '' }}
           docker build . --secret id=secret_1,src=secret_1.txt \
                          --secret id=secret_2,src=secret_2.txt \
                          --secret id=secret_3,src=secret_3.txt \
                          --secret id=secret_4,src=secret_4.txt \
                          --secret id=secret_5,src=secret_5.txt \
                          --secret id=secret_6,src=secret_6.txt \
-                         -t  ${{env.GAR_URL}}:latest
-          docker push ${{env.GAR_URL}}
+                         -t  $IMAGE_TAG:latest
+          docker push $IMAGE_TAG
           
