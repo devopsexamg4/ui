@@ -2,18 +2,25 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 from .forms import *
 
 # Collect the data to show on the frontpage
 def home(request):
+    if(request.user.is_authenticated):
+        print(request.user.username)
     context = {
         'title':'Home',
     }
     return render(request,'home.html',context)
 
 # collect data to show on the admin page
+@login_required(login_url='/login/')
 def admin(request):
-    pass
+    # if(request.user not in [Admins.objects.filter(user=request.user)]):
+    messages.error(request,"You do not have permissions to view this page")
+    return redirect('index')
     context = {
         'title':'Admin',
     }
@@ -28,7 +35,9 @@ def about(request):
     return render(request, 'about.html', context)
 
 # collect data to show on the student page
+@login_required(login_url='/login/')
 def student(request):
+    # if(request.user not in [Students.objects.filter(user=request.user)]):
     pass
     context = {
         'title':'Student',
@@ -36,8 +45,10 @@ def student(request):
     return render(request, 'student.html', context)
 
 # collect data to show on the teacher page
+@login_required(login_url='/login/')
 def teacher(request):
-    pass
+    # if(request.user not in [Teacher.objects.filter(user=request.user)]):
+    return redirect('index')
     context = {
         'title':'Teacher',
     }
