@@ -8,9 +8,6 @@ from .forms import *
 
 # Collect the data to show on the frontpage
 def home(request):
-    if(request.user.is_authenticated):
-        print(request.user.username)
-        print([User.TypeChoices(x.type).value for x in User.objects.filter(type = request.user.type)])
     context = {
         'title':'Home',
     }
