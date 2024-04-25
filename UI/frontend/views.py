@@ -6,52 +6,52 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
-"""Collect the data to show on the frontpage"""
 def home(request):
+    """Collect the data to show on the frontpage"""
     context = {
         'title':'Home',
     }
     return render(request,'home.html',context)
 
-"""collect data to show on the admin page"""
 @login_required(login_url='/login/')
 def admin(request):
+    """collect data to show on the admin page"""
     # if(request.user not in [Admins.objects.filter(user=request.user)]):
     messages.error(request,"You do not have permissions to view this page")
     return redirect('index')
-    context = {
-        'title':'Admin',
-    }
-    return render(request, 'admin.html', context)
+    # context = {
+    #     'title':'Admin',
+    # }
+    # return render(request, 'admin.html', context)
 
-"""collect data to show on the about page"""
 def about(request):
+    """collect data to show on the about page"""
     context = {
         'title':'About',
     }
     return render(request, 'about.html', context)
 
-"""collect data to show on the student page"""
 @login_required(login_url='/login/')
 def student(request):
+    """collect data to show on the student page"""
     # if(request.user not in [Students.objects.filter(user=request.user)]):
     context = {
         'title':'Student',
     }
     return render(request, 'student.html', context)
 
-"""collect data to show on the teacher page"""
 @login_required(login_url='/login/')
 def teacher(request):
+    """collect data to show on the teacher page"""
     # if(request.user not in [Teacher.objects.filter(user=request.user)]):
     return redirect('index')
-    context = {
-        'title':'Teacher',
-    }
-    return render(request, 'teacher.html', context)
+    # context = {
+    #     'title':'Teacher',
+    # }
+    # return render(request, 'teacher.html', context)
 
-"""the login page"""
 def user_login(request):
+    """the login page"""
     context = {
         'title':'Login',
     }
@@ -67,12 +67,12 @@ def user_login(request):
                 return redirect('index')
     else:
         form = LoginForm()
-    
+
     context['form'] = form
     return render(request, 'login.html', context )
 
-"""to create a new user"""
 def signup(request):
+    """ to create a new user """
     context = {
         'title':'Signup',
     }
@@ -80,39 +80,19 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.info(request, "user {} has been created\nPlease login".format(form.cleaned_data['username']))
+            messages.info(request, f"user {form.cleaned_data['username']} has been created\nPlease login")
             return redirect('login')
     else:
         form = SignupForm()
-    
+
     context['form'] = form
 
     return render(request, 'signup.html', context)
 
-""" logout page """
 def user_logout(request):
+    """ 
+    logout page
+    """
     logout(request)
     messages.info(request, "You have been logged out")
     return redirect('index')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
