@@ -107,6 +107,7 @@ PASSWORD_HASHERS = [
      "django.contrib.auth.hashers.Argon2PasswordHasher",
 ]
 
+AUTH_USER_MODEL = "frontend.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
