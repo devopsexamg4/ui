@@ -15,7 +15,6 @@ home and about are info pages, viewable by all
 """
 def home(request):
     """Collect the data to show on the frontpage"""
-    print([u.type for u in User.objects.filter(type=request.user.type)])
     context = {
         'title':'Home',
     }
