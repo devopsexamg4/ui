@@ -1,3 +1,6 @@
+"""
+All models used througout the application is defined in this file
+"""
 from datetime import datetime,timedelta
 from uuid import uuid4
 from django.db import models
@@ -15,7 +18,15 @@ def subdir(instance, _):
     return f"submissions/{instance.user.id}/{str(uuid4())}/"
 
 class Assignments(models.Model):
+    """
+    This model is used to configure a new assignment
+    the attributes stored here will be used to generate a yml file
+    that yml file is how kubernetes is configered to run the assignment
+    """
     class StatusChoices(models.TextChoices):
+        """
+        An assignment can be in one of four states as defined in this class
+        """
         HIDDEN = "HID",_("Hidden")
         ACTIVE = "ACT",_("Active")
         PAUSED = "PAU",_("Paused")
