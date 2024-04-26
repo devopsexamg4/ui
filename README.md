@@ -7,4 +7,8 @@ ui module
 1.	`python -m venv env` to start a virtual python environment
 1. `source env/bin/activate` to start python env(ironment)
 1. `pip install -r requirements.txt` to install dependencies into env
+1. `python manage.py collectstatic --no-input`
+1. `python manage.py makemigrations --no-input`
+1. `python manage.py migrate --no-input`
+1. `python manage.py createsuperuser`
 1. `./UI/manage.py runserver` to start development server
