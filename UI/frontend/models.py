@@ -10,26 +10,17 @@ def dockerdir(instance, _):
     """generate a path to save the uploaded dockerfile"""
     return f"assignments/{instance.user.id}/{str(uuid4())}/"
 
-class User(AbstractUser):
-    class TypeChoices(models.TextChoices):
-        ADMIN = "ADM", _("Admin")
-        TEACHER = "TEA", _("Teacher")
-        STUDENT = "STU", _("Student")
+def subdir(instance, _):
+    """Generate a path to save the uploaded submission"""
+    return f"submissions/{instance.user.id}/{str(uuid4())}/"
 
-    type = models.CharField(
-        max_length = 3,
-        choices = TypeChoices,
-        null = True,
-        default = TypeChoices.STUDENT,
-        )
-
-class Assignments(models.model):
+class Assignments(models.Model):
     class StatusChoices(models.TextChoices):
         HIDDEN = "HID",_("Hidden")
         ACTIVE = "ACT",_("Active")
         PAUSED = "PAU",_("Paused")
         FINISHED = "FIN",_("Finished")
-    
+
     status = models.CharField(
         max_length = 3,
         choices = StatusChoices,
@@ -50,23 +41,70 @@ class Assignments(models.model):
         default = timedelta(seconds = 120),
         validators = [ MaxValueValidator(timedelta(minutes = 10)) ]
     )
-    
+
     start = models.DateTimeField(
         default = datetime.now()
     )
-    
+
     end = models.DateTimeField(
         default = datetime.now() + timedelta(days = 14)
     )
-    
+
     dockerfile = models.FileField(
         upload_to = dockerdir
     )
-    
+
     maxsubs = models.PositiveIntegerField(
         default = 5,
         validators = [ MaxValueValidator(15) ]
     )
 
 
-# class StudentSubmissions(models.model):
+class StudentSubmissions(models.Model):
+    class ResChoices(models.TextChoices):
+        PASSED = "PAS", _("Passed")
+        FAILED = "FAI", _("Failed")
+        PENDING = "PEN", _("Pending")
+
+    result = models.CharField(
+        max_length = 3,
+        choices = ResChoices,
+        default = ResChoices.PENDING
+    )
+
+    File = models.FileField(
+        upload_to = subdir
+    )
+
+    log = models.FileField(
+        blank = True,
+        null = True
+    )
+
+    uploadtime = models.DateTimeField(
+        auto_now_add = True
+    )
+
+class User(AbstractUser):
+    class TypeChoices(models.TextChoices):
+        ADMIN = "ADM", _("Admin")
+        TEACHER = "TEA", _("Teacher")
+        STUDENT = "STU", _("Student")
+
+    type = models.CharField(
+        max_length = 3,
+        choices = TypeChoices,
+        null = True,
+        default = TypeChoices.STUDENT,
+        )
+
+    submission = models.ForeignKey(
+        StudentSubmissions,
+        on_delete = models.CASCADE,
+        blank = True,
+        null = True
+    )
+
+    assignments = models.ManyToManyField(
+        Assignments,
+    )
