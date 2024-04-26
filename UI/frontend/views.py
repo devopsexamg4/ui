@@ -1,28 +1,25 @@
+"""
+In This file all the rendering of the pages is defined
+"""
 from django.shortcuts import render, redirect
-# from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import *
-from .forms import *
+from .models import User
+from .forms import SignupForm, LoginForm
 
+STRING_403 = "You do not have permissions to view this page"
+
+"""
+home and about are info pages, viewable by all
+"""
 def home(request):
     """Collect the data to show on the frontpage"""
+    print([u.type for u in User.objects.filter(type=request.user.type)])
     context = {
         'title':'Home',
     }
     return render(request,'home.html',context)
-
-@login_required(login_url='/login/')
-def admin(request):
-    """collect data to show on the admin page"""
-    # if(request.user not in [Admins.objects.filter(user=request.user)]):
-    messages.error(request,"You do not have permissions to view this page")
-    return redirect('index')
-    # context = {
-    #     'title':'Admin',
-    # }
-    # return render(request, 'admin.html', context)
 
 def about(request):
     """collect data to show on the about page"""
@@ -31,10 +28,31 @@ def about(request):
     }
     return render(request, 'about.html', context)
 
+"""
+admin, student and teacher presents the views of those types of users
+"""
+@login_required(login_url='/login/')
+def admin(request):
+    """collect data to show on the admin page"""
+    if request.user not in [User.objects.filter(type = 'ADM' )]:
+        # the logged in user is not a teacher but is trying to access the page
+        messages.error(request, STRING_403)
+        return redirect('index')
+
+    context = {
+        'title':'Admin',
+    }
+    return render(request, 'admin.html', context)
+
+
 @login_required(login_url='/login/')
 def student(request):
     """collect data to show on the student page"""
-    # if(request.user not in [Students.objects.filter(user=request.user)]):
+    if request.user not in [User.objects.filter(type = 'STU')]:
+        # the logged in user is not a student but is trying to access the page
+        messages.error(request, STRING_403)
+        return redirect('index')
+
     context = {
         'title':'Student',
     }
@@ -43,13 +61,19 @@ def student(request):
 @login_required(login_url='/login/')
 def teacher(request):
     """collect data to show on the teacher page"""
-    # if(request.user not in [Teacher.objects.filter(user=request.user)]):
-    return redirect('index')
-    # context = {
-    #     'title':'Teacher',
-    # }
-    # return render(request, 'teacher.html', context)
+    if request.user not in [User.objects.filter(type = 'TEA')]:
+        # the logged in user is not a teacher but is trying to access the page
+        messages.error(request, STRING_403)
+        return redirect('index')
 
+    context = {
+        'title':'Teacher',
+    }
+    return render(request, 'teacher.html', context)
+
+"""
+user_login, signup and user_logout are used as their names suggest to login, create a user and logout
+"""
 def user_login(request):
     """the login page"""
     context = {
@@ -63,7 +87,7 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                messages.info(request, "Welcome {}".format(username))
+                messages.info(request, f"Welcome {username}")
                 return redirect('index')
     else:
         form = LoginForm()
