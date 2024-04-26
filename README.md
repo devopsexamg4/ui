@@ -16,7 +16,8 @@ ui module
 ## Starting the UI service in development mode
  
 2. `source env/bin/activate` to start python env(ironment)
-2. `pip install -r requirements.txt` to install dependencies into env
+    - After changes to the requirements
+        - `pip install -r requirements.txt` to install dependencies into env
     - After changes to the db
         - `python manage.py makemigrations --no-input`
         - `python manage.py migrate --no-input`
